@@ -6,7 +6,7 @@
 #    By: mkirkgoz <mkirkgoz@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/04 14:49:34 by mkirkgoz          #+#    #+#              #
-#    Updated: 2023/10/14 09:52:18 by mkirkgoz         ###   ########.fr        #
+#    Updated: 2023/11/08 20:59:00 by mkirkgoz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,9 @@ CC = cc
 
 RM = rm -f
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g 
+
+LDFLAGS = -fsanitize=address
 
 SRC =	./game/so_long.c ./game/map.c ./get_next_line/get_next_line.c \
 		./get_next_line/get_next_line_utils.c ./game/game_management.c \

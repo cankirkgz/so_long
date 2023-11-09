@@ -6,7 +6,7 @@
 /*   By: mkirkgoz <mkirkgoz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 13:08:03 by mkirkgoz          #+#    #+#             */
-/*   Updated: 2023/10/12 19:24:21 by mkirkgoz         ###   ########.fr       */
+/*   Updated: 2023/11/07 22:43:51 by mkirkgoz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	free (s1);
 	return (result);
 }
+
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	size_t	i;

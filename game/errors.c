@@ -6,13 +6,13 @@
 /*   By: mkirkgoz <mkirkgoz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 00:24:56 by mkirkgoz          #+#    #+#             */
-/*   Updated: 2023/10/14 10:38:36 by mkirkgoz         ###   ########.fr       */
+/*   Updated: 2023/11/08 20:35:24 by mkirkgoz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/so_long.h"
 
-static int	horizontalwall(t_game *game)
+int	horizontalwall(t_game *game)
 {
 	int	i;
 	int	j;
@@ -21,14 +21,15 @@ static int	horizontalwall(t_game *game)
 	j = 0;
 	while (j < i)
 	{
-		if (game->map[0][i] == '1' && game->map[game->heightmap - 1][j] == '1')
+		if (!(game->map[0][j] == '1'
+			&& game->map[game->heightmap - 1][j] == '1'))
 			return (0);
 		j++;
 	}
 	return (1);
 }
 
-static int	verticalwall(t_game *game)
+int	verticalwall(t_game *game)
 {
 	int	height;
 	int	width;
@@ -37,25 +38,12 @@ static int	verticalwall(t_game *game)
 	width = game->widthmap;
 	while (height < game->heightmap)
 	{
-		if (!(game->map[height][0] == '1' && game->map[height][width - 1] == '1'))
+		if (!(game->map[height][0] == '1'
+			&& game->map[height][width - 1] == '1'))
 			return (0);
 		height++;
 	}
 	return (1);
-}
-
-static void	if_walls(t_game *game)
-{
-	int	verticalwalls;
-	int	horizontalwalls;
-
-	verticalwalls = verticalwall(game);
-	horizontalwalls = horizontalwall(game);
-	if (!verticalwalls || !horizontalwalls)
-	{
-		error_message();
-		exit_point(game);
-	}
 }
 
 static void	count_checker(t_game *game, int height, int width)
@@ -71,11 +59,11 @@ static void	count_checker(t_game *game, int height, int width)
 		exit_point(game);
 	}
 	if (game->map[height][width] == 'C')
-			game->columncount++;
+		game->collectables++;
 	if (game->map[height][width] == 'P')
-			game->playercount++;
+		game->playercount++;
 	if (game->map[height][width] == 'E')
-			game->exitcount++;
+		game->exitcount++;
 }
 
 void	character_valid(t_game *game)
@@ -94,7 +82,7 @@ void	character_valid(t_game *game)
 		}
 		height++;
 	}
-	if (!(game->playercount == 1 && game->columncount > 1
+	if (!(game->playercount == 1 && game->collectables > 0
 			&& game->exitcount == 1))
 	{
 		printf("Error\nSomething is wrong!\n");
@@ -105,7 +93,10 @@ void	character_valid(t_game *game)
 
 void	check_errors(t_game *game)
 {
+	if (game->heightmap > 20)
+		exit_or_error("Too many lines!", game);
+	if (game->widthmap > 40)
+		exit_or_error("Too many columns!", game);
 	if_walls(game);
-
 	character_valid(game);
 }

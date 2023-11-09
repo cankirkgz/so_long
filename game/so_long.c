@@ -6,7 +6,7 @@
 /*   By: mkirkgoz <mkirkgoz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 14:52:28 by mkirkgoz          #+#    #+#             */
-/*   Updated: 2023/10/14 11:01:59 by mkirkgoz         ###   ########.fr       */
+/*   Updated: 2023/11/09 10:49:19 by mkirkgoz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ int	exit_point(t_game *game)
 	if (game->winpointer)
 		mlx_destroy_window(game->mlxpointer, game->winpointer);
 	free(game->mlxpointer);
-	while (line < game->heightmap - 1)
+	while (line < game->heightmap)
 		free(game->map[line++]);
 	free(game->map);
 	exit(0);
 }
 
-int key_press(int keycode, t_game *game)
+int	key_press(int keycode, t_game *game)
 {
 	if (keycode == 2)
 		right_move(game);
@@ -46,9 +46,25 @@ int key_press(int keycode, t_game *game)
 		up_move(game);
 	else if (keycode == 1)
 		down_move(game);
-    if (keycode == 53 || keycode == 17)
-        exit(0);
-    return (1);
+	if (keycode == 53 || keycode == 17)
+		exit(0);
+	return (1);
+}
+
+int	check_file_extension(const char *filename, const char *extension)
+{
+	int	filename_length;
+	int	extension_length;
+
+	filename_length = ft_strlen(filename);
+	extension_length = ft_strlen(extension);
+	if (filename_length < extension_length)
+		return (0);
+	if (ft_strncmp(&filename[filename_length - extension_length],
+			extension, filename_length) == 0)
+		return (1);
+	else
+		return (0);
 }
 
 int	main(int argc, char **argv)
@@ -57,35 +73,22 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 		return (0);
+	if (!check_file_extension(argv[1], ".ber"))
+		error_and_exit("Error!\nInvalid Extension\n\
+		Your extension must be '.ber'");
 	ft_memset(&game, 0, sizeof(t_game));
-    map_reading(&game, argv);
-	printf("----- ORJINAL ------------\n");
-	for (size_t i = 0; game.map[i]; i++)
-	{
-		printf("%s", game.map[i]);
-	}
-	printf("\n----- TEMP ------------\n");
-	for (size_t i = 0; game.temp_map[i]; i++)
-	{
-		printf("%s", game.temp_map[i]);
-	}
-	printf("\n----------------------------\n");
+	map_reading(&game, argv);
 	find_player(&game);
 	check_errors(&game);
-	//validate_game_map(&game);
-	for(int i = 0; i < game.heightmap; i++)
-	{
-		ft_printf("%s", game.map[i]);
-	}
-	ft_printf("lalala");
-    game.mlxpointer = mlx_init();
-	game.winpointer = mlx_new_window(game.mlxpointer, 
-		game.widthmap * TILE_SIZE, game.heightmap * TILE_SIZE, "solong");
+	validate_game_map(&game);
+	game.mlxpointer = mlx_init();
+	game.winpointer = mlx_new_window(game.mlxpointer,
+			game.widthmap * TILE_SIZE, game.heightmap * TILE_SIZE, "solong");
 	place_images_in_game(&game);
 	draw_map(&game);
 	game.collectables = count_coin(&game);
-    mlx_hook(game.winpointer, 2, 1L << 0, key_press, &game);
-    mlx_hook(game.winpointer, 17, 1L << 0, ft_close, &game);
+	mlx_hook(game.winpointer, 2, 1L << 0, key_press, &game);
+	mlx_hook(game.winpointer, 17, 1L << 0, ft_close, &game);
 	mlx_loop(game.mlxpointer);
 	return (0);
 }

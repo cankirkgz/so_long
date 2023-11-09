@@ -6,7 +6,7 @@
 /*   By: mkirkgoz <mkirkgoz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 17:32:10 by mkirkgoz          #+#    #+#             */
-/*   Updated: 2023/10/12 19:39:16 by mkirkgoz         ###   ########.fr       */
+/*   Updated: 2023/11/08 21:17:24 by mkirkgoz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,13 @@ void	mark_winnable_areas(char **tmp_map, int x, int y)
 		tmp_map[y][x] = 'x';
 }
 
+void	invalid_game_exit(char **map, t_game *game)
+{
+	ft_printf("Error!\nThe game is not winnable!\n");
+	destroy_map(map, *game);
+	exit(0);
+}
+
 void	check_winnability_and_obstacles(char **tmp_map, t_game *game)
 {
 	int	y;
@@ -45,15 +52,9 @@ void	check_winnability_and_obstacles(char **tmp_map, t_game *game)
 			if (tmp_map[y][x] == 'E')
 				if (tmp_map[y - 1][x] != 'x' && tmp_map[y + 1][x] != 'x'
 					&& tmp_map[y][x - 1] != 'x' && tmp_map[y][x + 1] != 'x')
-					{
-						ft_printf("Error\nThe game is not winnable!\n");
-						exit_point(game);
-					}
+					invalid_game_exit(tmp_map, game);
 			if (tmp_map[y][x] == 'C' || tmp_map[y][x] == 'P')
-				{
-					ft_printf("Error\nThe game is not winnable!\n");
-					exit_point(game);
-				}
+				invalid_game_exit(tmp_map, game);
 			x++;
 		}
 		y++;
@@ -64,6 +65,15 @@ void	validate_game_map(t_game *game)
 {
 	mark_winnable_areas(game->temp_map, game->x_axis, game->y_axis);
 	check_winnability_and_obstacles(game->temp_map, game);
-	//component_check(game);
-	//wall_check(game);
+}
+
+void	if_walls(t_game *game)
+{
+	int	verticalwalls;
+	int	horizontalwalls;
+
+	verticalwalls = verticalwall(game);
+	horizontalwalls = horizontalwall(game);
+	if (!verticalwalls || !horizontalwalls)
+		error_message("Error! Invalid Map", game);
 }

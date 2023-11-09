@@ -6,17 +6,17 @@
 /*   By: mkirkgoz <mkirkgoz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 22:51:18 by mkirkgoz          #+#    #+#             */
-/*   Updated: 2023/10/14 10:36:02 by mkirkgoz         ###   ########.fr       */
+/*   Updated: 2023/11/08 01:36:55 by mkirkgoz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/so_long.h"
 
-void  find_player(t_game *game)
+void	find_player(t_game *game)
 {
-	char **map;
-	int x;
-	int y;
+	char	**map;
+	int		x;
+	int		y;
 
 	map = game->map;
 	y = 0;
@@ -36,11 +36,11 @@ void  find_player(t_game *game)
 	}
 }
 
-int count_coin(t_game *game)
+int	count_coin(t_game *game)
 {
 	int	count;
 	int	i;
-	int j;
+	int	j;
 
 	count = 0;
 	i = 0;
@@ -75,11 +75,14 @@ void	place_images_in_game(t_game *game)
 			"assets/door.xpm", &i, &j);
 	game->collectable = mlx_xpm_file_to_image(game->mlxpointer,
 			"assets/coin.xpm", &i, &j);
+	if (!(game->floor && game->barrier && game->exit && game->collectable))
+		error_message("Invalid texture!", game);
 }
-void draw_map(t_game *game)
+
+void	draw_map(t_game *game)
 {
 	int	i;
-	int j;
+	int	j;
 
 	i = 0;
 	while (i < game->heightmap)
@@ -94,20 +97,23 @@ void draw_map(t_game *game)
 	}
 }
 
-void draw_tile(t_game *game, int x, int y, char type)
+void	draw_tile(t_game *game, int x, int y, char type)
 {
-	char	*file_path;
-
-	file_path = NULL;
-	mlx_put_image_to_window(game->mlxpointer, game->winpointer, game->floor, x, y);
+	mlx_put_image_to_window(game->mlxpointer,
+		game->winpointer, game->floor, x, y);
 	if (type == '1')
-		mlx_put_image_to_window(game->mlxpointer, game->winpointer, game->barrier, x, y);
+		mlx_put_image_to_window(game->mlxpointer,
+			game->winpointer, game->barrier, x, y);
 	else if (type == '0')
-		mlx_put_image_to_window(game->mlxpointer, game->winpointer, game->floor, x, y);
-	else if( type == 'C')
-		mlx_put_image_to_window(game->mlxpointer, game->winpointer, game->collectable, x, y);
+		mlx_put_image_to_window(game->mlxpointer,
+			game->winpointer, game->floor, x, y);
+	else if (type == 'C')
+		mlx_put_image_to_window(game->mlxpointer,
+			game->winpointer, game->collectable, x, y);
 	else if (type == 'P')
-		mlx_put_image_to_window(game->mlxpointer, game->winpointer, game->player, x, y);
+		mlx_put_image_to_window(game->mlxpointer,
+			game->winpointer, game->player, x, y);
 	else if (type == 'E')
-		mlx_put_image_to_window(game->mlxpointer, game->winpointer, game->exit, x, y);
+		mlx_put_image_to_window(game->mlxpointer,
+			game->winpointer, game->exit, x, y);
 }
